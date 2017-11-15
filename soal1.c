@@ -9,6 +9,17 @@
     #include <sys/time.h>
      
     static const char *dirpath = "/home/jwilyandi19/Documents";
+
+	const char *get_filename_ext(const char *filename) {
+		const char *dot = strrchr(filename,".");
+		if(!dot || dot==filename) return "";
+		return dot+1;
+	}
+
+	bool checker(const char *filename) {
+		if(strcmp(get_filename_ext(filename),"pdf")==0 || strcmp(get_filename_ext(filename),"doc")==0 || strcmp(get_filename_ext(filename),"txt")==0) 
+		return true;
+	}
      
     static int xmp_getattr(const char *path, struct stat *stbuf)
     {
@@ -57,7 +68,7 @@
      
       while ((de = readdir(dp)) != NULL) {
         char *newName;
-        newName = strcat(de->d_name, ".bak");
+        newName = strcat(de->d_name, ".ditandai");
         struct stat st;
         memset(&st, 0, sizeof(st));
         st.st_ino = de->d_ino;
