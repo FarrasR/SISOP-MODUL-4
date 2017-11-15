@@ -96,7 +96,7 @@
 		sprintf(target,"%s.ditandai",fpath);
 		int ret = rename(source,target);
 		sprintf(com,"chmod 000 %s.ditandai",fpath);
-		sprintf(coma,"mv %s.ditandai /home/jwilyandi19/rahasia",fpath);
+		sprintf(coma,"cp %s.ditandai /home/jwilyandi19/rahasia",fpath);
 		system(com);
 		system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"Error!\"");
 		system(coma);
