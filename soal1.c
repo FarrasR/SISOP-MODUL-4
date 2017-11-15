@@ -11,14 +11,14 @@
     static const char *dirpath = "/home/jwilyandi19/Documents";
 
 	const char *get_filename_ext(const char *filename) {
-		const char *dot = strrchr(filename,".");
+		const char *dot = strrchr(filename,'.');
 		if(!dot || dot==filename) return "";
 		return dot+1;
 	}
 
-	bool checker(const char *filename) {
+	int checker(const char *filename) {
 		if(strcmp(get_filename_ext(filename),"pdf")==0 || strcmp(get_filename_ext(filename),"doc")==0 || strcmp(get_filename_ext(filename),"txt")==0) 
-		return true;
+		return 1;
 	}
      
     static int xmp_getattr(const char *path, struct stat *stbuf)
