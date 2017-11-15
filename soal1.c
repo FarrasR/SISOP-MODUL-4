@@ -17,25 +17,18 @@
 	}
 
 	int checker(const char *filename) {
-		if(strcmp(get_filename_ext(filename),"pdf")==0 || strcmp(get_filename_ext(filename),"doc")==0 || strcmp(get_filename_ext(filename),"txt")==0) 
+		if(strcmp(get_filename_ext(filename),".pdf")==0 || strcmp(get_filename_ext(filename),".doc")==0 || strcmp(get_filename_ext(filename),".txt")==0) 
 		return 1;
+
+		return 0;
 	}
      
     static int xmp_getattr(const char *path, struct stat *stbuf)
     {
       int res;
       char fpath[1000];
-      char newFile[100];
-      printf("path : %s, len: %d\n", path, strlen(path));
-      if (strcmp(path, "/") != 0) {
-        memcpy(newFile, path, strlen(path) - 4);
-        newFile[strlen(path) - 4] = '\0';
-      } else {
-        memcpy(newFile, path, strlen(path));
-      }
-      printf("newFile: %s\n", newFile);
-      sprintf(fpath,"%s%s",dirpath, newFile);
-	printf("%s\n",fpath);
+      sprintf(fpath,"%s%s",dirpath, path);
+	//printf("%s\n",fpath);
       res = lstat(fpath, stbuf);
      
       if (res == -1)
@@ -67,13 +60,11 @@
         return -errno;
      
       while ((de = readdir(dp)) != NULL) {
-        char *newName;
-        newName = strcat(de->d_name, ".ditandai");
         struct stat st;
         memset(&st, 0, sizeof(st));
         st.st_ino = de->d_ino;
         st.st_mode = de->d_type << 12;
-        res = (filler(buf, newName, &st, 0));
+        res = (filler(buf, de->d_name, &st, 0));
           if(res!=0) break;
       }
      
@@ -85,21 +76,28 @@
      	   struct fuse_file_info *fi)
     {
       char fpath[1000];
-      char newFile[100];
       if(strcmp(path,"/") == 0)
       {
-        memcpy(newFile, path, strlen(path));
-    //    path=dirpath;
-        sprintf(fpath,"%s",newFile);
+       path=dirpath;
+        sprintf(fpath,"%s",path);
       }
       else {
-        memcpy(newFile, path, strlen(path) - 4);
-        newFile[strlen(path) - 4] = '\0';
      
-        sprintf(fpath, "%s%s",dirpath,newFile);
+        sprintf(fpath, "%s%s",dirpath,path);
       }
       int res = 0;
       int fd = 0 ;
+	char source[1000],target[1000];
+
+	if(checker(fpath)==1) {
+		DIR *dj = opendir("/home/jwilyandi19/rahasia");
+		if(ENOENT == errno) system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
+		sprintf(source,"%s",fpath);
+		sprintf(target,"%s",fpath);
+		int ret = rename(source,target);
+	}
+else {
+		
      
       (void) fi;
       fd = open(fpath, O_RDONLY);
@@ -112,6 +110,7 @@
      
       close(fd);
       return res;
+	}
     }
      
     static struct fuse_operations xmp_oper = {
