@@ -17,7 +17,8 @@
 	}
 
 	int checker(const char *filename) {
-		if(strcmp(get_filename_ext(filename),".pdf")==0 || strcmp(get_filename_ext(filename),".doc")==0 || strcmp(get_filename_ext(filename),".txt")==0) 
+		printf("%s\n",get_filename_ext(filename));
+		if(strcmp(get_filename_ext(filename),"pdf")==0 || strcmp(get_filename_ext(filename),"doc")==0 || strcmp(get_filename_ext(filename),"txt")==0) 
 		return 1;
 
 		return 0;
@@ -87,14 +88,20 @@
       }
       int res = 0;
       int fd = 0 ;
-	char source[1000],target[1000];
-
+	char source[1000],target[1000],com[1000],coma[1000];
+	
 	if(checker(fpath)==1) {
-		DIR *dj = opendir("/home/jwilyandi19/rahasia");
-		if(ENOENT == errno) system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
+		system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
 		sprintf(source,"%s",fpath);
-		sprintf(target,"%s",fpath);
+		sprintf(target,"%s.ditandai",fpath);
 		int ret = rename(source,target);
+		sprintf(com,"chmod 000 %s.ditandai",fpath);
+		sprintf(coma,"mv %s.ditandai /home/jwilyandi19/rahasia",fpath);
+		system(com);
+		system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"Error!\"");
+		system(coma);
+		return -errno;
+		
 	}
 else {
 		
@@ -121,6 +128,7 @@ else {
      
     int main(int argc, char *argv[])
     {
+	//printf("%s\n",get_filename_ext("haha/haha/gfs.pdf"));
       umask(0);
       return fuse_main(argc, argv, &xmp_oper, NULL);
     }
