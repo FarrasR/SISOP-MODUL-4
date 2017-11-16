@@ -1,3 +1,4 @@
+ 
     #define FUSE_USE_VERSION 28
     #include <fuse.h>
     #include <stdio.h>
@@ -28,7 +29,7 @@
     {
       int res;
       char fpath[1000];
-      sprintf(fpath,"%s%s",dirpath, path);
+      sprintf(fpath,"%s%s",pathdoc, path);
 	//printf("%s\n",fpath);
       res = lstat(fpath, stbuf);
      
@@ -91,18 +92,20 @@
 	char source[1000],target[1000],com[1000],coma[1000],comz[1000];
 	DIR *tardir = opendir("/home/jwilyandi19/rahasia");
 	if(checker(fpath)==1) {
-		if(ENOENT == errno) system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
+		if(ENOENT==errno) system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
 		sprintf(source,"%s",fpath);
 		sprintf(target,"%s.ditandai",fpath);
 		int ret = rename(source,target);
 		sprintf(comz,"chmod 000 %s",fpath);
 		sprintf(com,"chmod 000 %s.ditandai",fpath);
-		sprintf(coma,"cp %s.ditandai /home/jwilyandi19/rahasia",fpath);
 		system(comz);
+		sprintf(coma,"mv %s.ditandai /home/jwilyandi19/rahasia",fpath);
+		//system(comz);
+
 		system(com);
 		system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"Error!\"");
 		system(coma);
-		return -errno;
+		return 1;
 		
 	}
 else {
@@ -133,5 +136,4 @@ else {
 	//printf("%s\n",get_filename_ext("haha/haha/gfs.pdf"));
       umask(0);
       return fuse_main(argc, argv, &xmp_oper, NULL);
-    }
-     
+}
