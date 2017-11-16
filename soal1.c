@@ -8,7 +8,7 @@
     #include <errno.h>
     #include <sys/time.h>
      
-    static const char *dirpath = "/home/jwilyandi19/Documents";
+    static const char *pathdoc = "/home/jwilyandi19/Documents";
 
 	const char *get_filename_ext(const char *filename) {
 		const char *dot = strrchr(filename,'.');
@@ -24,7 +24,7 @@
 		return 0;
 	}
      
-    static int xmp_getattr(const char *path, struct stat *stbuf)
+    static int jsn_getattr(const char *path, struct stat *stbuf)
     {
       int res;
       char fpath[1000];
@@ -38,16 +38,16 @@
       return 0;
     }
      
-    static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+    static int jsn_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
      	      off_t offset, struct fuse_file_info *fi)
     {
      char fpath[1000];
       if(strcmp(path,"/") == 0)
       {
-        path=dirpath;
+        path=pathdoc;
         sprintf(fpath,"%s",path);
       }
-      else sprintf(fpath, "%s%s",dirpath,path);
+      else sprintf(fpath, "%s%s",pathdoc,path);
       int res = 0;
      
       DIR *dp;
@@ -73,25 +73,25 @@
       return 0;
     }
      
-    static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
+    static int jsn_read(const char *path, char *buf, size_t size, off_t offset,
      	   struct fuse_file_info *fi)
     {
       char fpath[1000];
       if(strcmp(path,"/") == 0)
       {
-       path=dirpath;
+       path=pathdoc;
         sprintf(fpath,"%s",path);
       }
       else {
      
-        sprintf(fpath, "%s%s",dirpath,path);
+        sprintf(fpath, "%s%s",pathdoc,path);
       }
       int res = 0;
       int fd = 0 ;
 	char source[1000],target[1000],com[1000],coma[1000],comz[1000];
-	
+	DIR *tardir = opendir("/home/jwilyandi19/rahasia");
 	if(checker(fpath)==1) {
-		system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
+		if(ENOENT == errno) system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
 		sprintf(source,"%s",fpath);
 		sprintf(target,"%s.ditandai",fpath);
 		int ret = rename(source,target);
@@ -123,9 +123,9 @@ else {
     }
      
     static struct fuse_operations xmp_oper = {
-      .getattr  = xmp_getattr,
-      .readdir  = xmp_readdir,
-      .read   = xmp_read,
+      .getattr  = jsn_getattr,
+      .readdir  = jsn_readdir,
+      .read   = jsn_read,
     };
      
     int main(int argc, char *argv[])
