@@ -88,15 +88,17 @@
       }
       int res = 0;
       int fd = 0 ;
-	char source[1000],target[1000],com[1000],coma[1000];
+	char source[1000],target[1000],com[1000],coma[1000],comz[1000];
 	
 	if(checker(fpath)==1) {
 		system("mkdir /home/jwilyandi19/rahasia"); //jwilyandi19 bisa diganti user
 		sprintf(source,"%s",fpath);
 		sprintf(target,"%s.ditandai",fpath);
 		int ret = rename(source,target);
+		sprintf(comz,"chmod 000 %s",fpath);
 		sprintf(com,"chmod 000 %s.ditandai",fpath);
 		sprintf(coma,"cp %s.ditandai /home/jwilyandi19/rahasia",fpath);
+		system(comz);
 		system(com);
 		system("zenity --error --text=\"Terjadi Kesalahan! File berisi konten berbahaya.\n\" --title=\"Error!\"");
 		system(coma);
